@@ -1,13 +1,12 @@
-require("dotenv").config();
-
 const express = require("express");
 const router = express.Router();
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
+
 cloudinary.config({
-  cloud_name: "drjozatzx",
-  api_key: "522448521911844",
-  api_secret: "bZLUczCdD4rU1-eM0cAL4hY7Axk",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 const isAuthenticated = require("../middlewares/isAuthenticated");

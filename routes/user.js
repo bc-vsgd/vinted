@@ -7,9 +7,9 @@ const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
-  cloud_name: "drjozatzx",
-  api_key: "522448521911844",
-  api_secret: "bZLUczCdD4rU1-eM0cAL4hY7Axk",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 const User = require("../models/User");
@@ -52,11 +52,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
         public_id: newUser.id,
       });
       const { secure_url } = sentFile;
-      newUser.account = {
-        avatar: {
-          secure_url,
-        },
-      };
+      newUser.account.avatar = secure_url;
     }
     await newUser.save();
     //Response

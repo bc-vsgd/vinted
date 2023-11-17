@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGODB_URI);
 const app = express();
 
-app.use(cors);
+app.use(cors());
 app.use(express.json());
 const userRoutes = require("./routes/user");
 const offerRoutes = require("./routes/offer");
