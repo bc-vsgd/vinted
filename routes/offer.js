@@ -71,6 +71,8 @@ router.post(
   }
 );
 
+//UPDATE
+//Update by ID
 router.put("/offer/modify/:id", fileUpload(), async (req, res) => {
   try {
     //Check offer (by id)
@@ -118,9 +120,14 @@ router.put("/offer/modify/:id", fileUpload(), async (req, res) => {
       const convertedFile = `data:${file.mimetype};base64,${file.data.toString(
         "base64"
       )}`;
-      await cloudinary.uploader.upload(convertedFile, {
+      const sentFile = await cloudinary.uploader.upload(convertedFile, {
         folder: "vinted/offers",
         public_id: updatedOffer.id,
+      });
+      const { secure_url } = sentFile;
+      //Save
+      await Offer.findByIdAndUpdate(offerId, {
+        product_image: { secure_url },
       });
     }
     //Response
@@ -133,6 +140,8 @@ router.put("/offer/modify/:id", fileUpload(), async (req, res) => {
   }
 });
 
+//DELETE
+//Delete by id
 router.delete("/offer/remove/:id", async (req, res) => {
   try {
     //Check offer by id
@@ -151,6 +160,27 @@ router.delete("/offer/remove/:id", async (req, res) => {
     await Offer.findByIdAndDelete(offerId);
     //Response
     return res.status(200).json({ message: "Offer successfully removed" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+//GET
+//Get offer by id
+router.get("/offer/:id", async (req, res) => {
+  try {
+    console.log(req.params.id);
+    const offerId = req.params.id;
+    const foundOffer = await Offer.findById(offerId).populate({
+      path: "owner",
+      select: "account.username account.avatar",
+    });
+    console.log(foundOffer);
+    if (!foundOffer) {
+      return res.status(400).json({ message: "This offer id does not exist" });
+    }
+
+    return res.status(200).json({ message: "Get offer by id" });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
