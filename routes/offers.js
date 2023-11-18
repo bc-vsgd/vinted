@@ -11,7 +11,8 @@ router.get("/offers", async (req, res) => {
     //Title, priceMax, priceMin
     const filter = {};
     if (title) {
-      filter.product_name = title;
+      // filter.product_name = title;
+      filter.product_name = new RegExp(title, "i");
     }
     if (priceMin && priceMax) {
       filter.product_price = { $gte: Number(priceMin), $lte: Number(priceMax) };
