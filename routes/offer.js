@@ -169,18 +169,15 @@ router.delete("/offer/remove/:id", async (req, res) => {
 //Get offer by id
 router.get("/offer/:id", async (req, res) => {
   try {
-    console.log(req.params.id);
     const offerId = req.params.id;
     const foundOffer = await Offer.findById(offerId).populate({
       path: "owner",
       select: "account.username account.avatar",
     });
-    console.log(foundOffer);
     if (!foundOffer) {
       return res.status(400).json({ message: "This offer id does not exist" });
     }
-
-    return res.status(200).json({ message: "Get offer by id" });
+    return res.status(200).json({ offer: await Offer.findById(offerId) });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
