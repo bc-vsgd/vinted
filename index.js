@@ -4,17 +4,17 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGODB_URI + "Vinted");
+mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 const userRoutes = require("./routes/user");
 const offerRoutes = require("./routes/offer");
-const offersRoutes = require("./routes/offers");
+// const offersRoutes = require("./routes/offers");
 app.use(userRoutes);
 app.use(offerRoutes);
-app.use(offersRoutes);
+// app.use(offersRoutes);
 
 app.get("/", (req, res) => {
   try {
