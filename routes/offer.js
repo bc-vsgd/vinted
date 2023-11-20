@@ -271,12 +271,15 @@ router.delete("/offer/remove/:id", async (req, res) => {
       return res.status(401).json({ message: "Unauthorized access" });
     }
     //Remove file(s) from cloudinary folder
-    for (let i = 0; i < foundOffer.product_pictures.length; i++) {
-      const public_id = foundOffer.product_pictures[i].public_id;
-      await cloudinary.uploader.destroy(public_id);
+    //In case of no picture attached (for axios test)
+    if (foundOffer.product_pictures.length !== 0) {
+      for (let i = 0; i < foundOffer.product_pictures.length; i++) {
+        const public_id = foundOffer.product_pictures[i].public_id;
+        await cloudinary.uploader.destroy(public_id);
+      }
+      //Remove folder from cloudinary
+      await cloudinary.api.delete_folder(`vinted/offers/${offerId}`);
     }
-    //Remove folder from cloudinary
-    await cloudinary.api.delete_folder(`vinted/offers/${offerId}`);
 
     //Delete offer from DB
     await Offer.findByIdAndDelete(offerId);
