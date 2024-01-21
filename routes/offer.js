@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
+const axios = require("axios");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -149,16 +150,27 @@ router.get("/offers", async (req, res) => {
 router.get("/offer/:id", async (req, res) => {
   try {
     const offerId = req.params.id;
-    const foundOffer = await Offer.findById(offerId).populate({
-      path: "owner",
-      select: "account.username account.avatar",
-    });
-    if (!foundOffer) {
-      return res.status(400).json({ message: "This offer id does not exist" });
-    }
-    return res
-      .status(200)
-      .json({ offer: await Offer.findById(offerId).populate("owner") });
+    // DATA BASE REQUEST
+    //
+    // const foundOffer = await Offer.findById(offerId).populate({
+    //   path: "owner",
+    //   select: "account.username account.avatar",
+    // });
+    // if (!foundOffer) {
+    //   return res.status(400).json({ message: "This offer id does not exist" });
+    // }
+    // return res
+    //   .status(200)
+    //   .json({ offer: await Offer.findById(offerId).populate("owner") });
+    //
+    // API REQUEST
+    //
+    const url = "https://lereacteur-vinted-api.herokuapp.com/offers";
+
+    const response = await axios.get(url);
+    const offers = response.data.offers;
+    const indexFound = offers.findIndex((offer) => offer._id === offerId);
+    return res.status(200).json(offers[indexFound]);
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
