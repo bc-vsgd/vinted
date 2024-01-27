@@ -24,8 +24,17 @@ router.post(
   async (req, res) => {
     try {
       //Get parameters, new Offer
-      const { title, description, price, condition, city, brand, size, color } =
-        req.body;
+      const {
+        title,
+        description,
+        price,
+        condition,
+        city,
+        brand,
+        size,
+        color,
+        payment,
+      } = req.body;
       const newOffer = new Offer({
         product_name: title,
         product_description: description,
@@ -46,6 +55,7 @@ router.post(
           {
             EMPLACEMENT: city,
           },
+          { "MODES DE PAIEMENT": payment },
         ],
         owner: req.user,
       });
@@ -150,27 +160,29 @@ router.get("/offers", async (req, res) => {
 router.get("/offer/:id", async (req, res) => {
   try {
     const offerId = req.params.id;
+    console.log("back >>> route offer/:id >>>>", offerId);
     // DATA BASE REQUEST
     //
-    // const foundOffer = await Offer.findById(offerId).populate({
-    //   path: "owner",
-    //   select: "account.username account.avatar",
-    // });
-    // if (!foundOffer) {
-    //   return res.status(400).json({ message: "This offer id does not exist" });
-    // }
-    // return res
-    //   .status(200)
-    //   .json({ offer: await Offer.findById(offerId).populate("owner") });
+    const foundOffer = await Offer.findById(offerId).populate({
+      path: "owner",
+      select: "account.username account.avatar",
+    });
+    if (!foundOffer) {
+      return res.status(400).json({ message: "This offer id does not exist" });
+    }
+    return res
+      .status(200)
+      .json({ offer: await Offer.findById(offerId).populate("owner") });
     //
     // API REQUEST
     //
-    const url = "https://lereacteur-vinted-api.herokuapp.com/offers";
+    // const url = "https://lereacteur-vinted-api.herokuapp.com/offers";
 
-    const response = await axios.get(url);
-    const offers = response.data.offers;
-    const indexFound = offers.findIndex((offer) => offer._id === offerId);
-    return res.status(200).json(offers[indexFound]);
+    // const response = await axios.get(url);
+    // const offers = response.data.offers;
+    // const indexFound = offers.findIndex((offer) => offer._id === offerId);
+    // return res.status(200).json(offers[indexFound]);
+    //
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }

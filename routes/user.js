@@ -19,12 +19,15 @@ const User = require("../models/User");
 router.post("/user/signup", fileUpload(), async (req, res) => {
   try {
     const { username, email, password, newsletter } = req.body;
+    // console.log(username);
     const foundUser = await User.findOne({ email });
     if (foundUser) {
-      return res.status(409).json({ message: "This email already exists" });
+      // 409
+      return res.status(200).json({ message: "This email already exists" });
     }
     if (!username) {
-      return res.status(400).json({ message: "Please enter a username" });
+      // 400
+      return res.status(200).json({ message: "Please enter a username" });
     }
     //New User
     const salt = uid2(24);

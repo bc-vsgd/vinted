@@ -1,3 +1,5 @@
+const Offer = require("./models/Offer");
+
 const axios = require("axios");
 require("dotenv").config();
 
@@ -17,12 +19,9 @@ app.use(offerRoutes);
 
 app.get("/", async (req, res) => {
   try {
-    const url = "https://lereacteur-vinted-api.herokuapp.com/offers";
-
-    const response = await axios.get(url);
-    const data = response.data;
-    // return res.status(200).json({ message: "Welcome to Vinted home page !" });
-    return res.status(200).json({ data });
+    // offers: objects array
+    const offers = await Offer.find().populate("owner");
+    return res.status(200).json({ offers });
   } catch (error) {
     // return res.status(500).json({ message: "Internal server error" });
     return res.status(500).json({ message: error.message });
