@@ -59,7 +59,7 @@ router.post(
         ],
         owner: req.user,
       });
-
+      // console.log(req.files);
       //Upload files to Cloudinary
       if (req.files) {
         //One file
@@ -106,8 +106,8 @@ router.post(
         .status(201)
         .json({ message: "Offer successfully published", offer: newOffer });
     } catch (error) {
-      return res.status(500).json({ message: "Internal server error" });
-      // return res.status(500).json({ message: error.message });
+      // return res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: error.message });
     }
   }
 );
