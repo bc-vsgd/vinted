@@ -144,7 +144,8 @@ router.get("/offers", async (req, res) => {
     const offers = await Offer.find(filter)
       .sort(sortFilter)
       .limit(limit)
-      .skip(skip);
+      .skip(skip)
+      .populate("owner");
     //Response
     if (offers.length === 0) {
       return res.status(200).json({ message: "No offer for the moment ..." });
