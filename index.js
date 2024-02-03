@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const mongoose = require("mongoose");
 
 mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
@@ -25,6 +26,21 @@ app.get("/", async (req, res) => {
   } catch (error) {
     // return res.status(500).json({ message: "Internal server error" });
     return res.status(500).json({ message: error.message });
+  }
+});
+
+app.post("/pay", async (req, res) => {
+  try {
+    const { stripeToken, totalPrice, title } = req.body;
+    const response = await stripe.charges.create({
+      amount: totalPrice * 100,
+      currency: "eur",
+      description: title,
+      source: stripeToken,
+    });
+    res.json(response);
+  } catch (error) {
+    return res.json(error.message);
   }
 });
 

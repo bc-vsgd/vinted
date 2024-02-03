@@ -161,7 +161,7 @@ router.get("/offers", async (req, res) => {
 router.get("/offer/:id", async (req, res) => {
   try {
     const offerId = req.params.id;
-    console.log("back >>> route offer/:id >>>>", offerId);
+    // console.log("back >>> route offer/:id >>>>", offerId);
     // DATA BASE REQUEST
     //
     const foundOffer = await Offer.findById(offerId).populate({
