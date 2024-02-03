@@ -33,7 +33,7 @@ app.post("/pay", async (req, res) => {
   try {
     const { stripeToken, totalPrice, title } = req.body;
     const response = await stripe.charges.create({
-      amount: totalPrice * 100,
+      amount: Number((totalPrice * 100).toFixed(0)),
       currency: "eur",
       description: title,
       source: stripeToken,
