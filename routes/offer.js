@@ -135,7 +135,7 @@ router.get("/offers", async (req, res) => {
       sortFilter.product_price = sort.replace("price-", "");
     }
     //Page (default 10 results / page)
-    const limit = 20;
+    const limit = 30;
     let skip = 0;
     if (page) {
       skip = (Number(page) - 1) * limit;
